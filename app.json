@@ -1,0 +1,54 @@
+{
+  "expo": {
+    "name": "하자 점검",
+    "slug": "mobile-inspection",
+    "scheme": "inspection-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_MEDIA_VISUAL_USER_SELECTED",
+        "android.permission.READ_MEDIA_IMAGES"
+      ],
+      "package": "com.anonymous.mobileinspection"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "하자 점검 사진을 촬영하기 위해 카메라 접근 권한이 필요합니다.",
+          "recordAudioAndroid": false
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "점검 사진을 갤러리에 저장하기 위해 사진 접근 권한이 필요합니다.",
+          "savePhotosPermission": "합성된 점검 사진을 갤러리에 저장하기 위해 권한이 필요합니다.",
+          "granularPermissions": [
+            "photo"
+          ]
+        }
+      ]
+    ]
+  }
+}
