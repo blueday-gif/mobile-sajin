@@ -51,6 +51,12 @@
         }
       ],
       "expo-status-bar"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "3a880892-2d27-4e55-95fb-58ade6e90b58"
+      }
+    },
+    "owner": "il2sam4o"
   }
 }
