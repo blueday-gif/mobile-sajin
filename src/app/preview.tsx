@@ -34,6 +34,27 @@ type ImageDimensions = {
   height: number;
 };
 
+type TableMetrics = {
+  label: number;
+  font: number;
+  padX: number;
+  padY: number;
+};
+
+const rowLabelStyle = (m: TableMetrics) => ({
+  fontSize: m.font,
+  minWidth: m.label,
+  width: m.label,
+  paddingHorizontal: m.padX,
+  paddingVertical: m.padY,
+});
+
+const rowValueStyle = (m: TableMetrics) => ({
+  fontSize: m.font,
+  paddingHorizontal: m.padX,
+  paddingVertical: m.padY,
+});
+
 function makeRecordId() {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
@@ -221,6 +242,18 @@ export default function PhotoPreviewScreen() {
 
   const { position, content } = describeInspection(draft);
 
+  // 샘플 사진(1500px 기준)의 표 비율: 너비 약 44%, 행 높이 약 4.4%, 글자 약 2%.
+  // 모든 값을 미리보기 사진 너비에 비례하게 두어 저장되는 사진에서도 같은 비율이 나오게 합니다.
+  const pw = previewSize?.width ?? 0;
+  const tableMetrics = {
+    width: pw * 0.44,
+    row: pw * 0.044,
+    label: pw * 0.085,
+    font: pw * 0.0195,
+    padX: pw * 0.006,
+    padY: pw * 0.008,
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar style="dark" />
@@ -252,22 +285,19 @@ export default function PhotoPreviewScreen() {
               />
               <View
                 accessibilityLabel="사진에 합성될 점검 정보"
-                style={[
-                  styles.inspectionTable,
-                  { width: Math.min(previewSize.width * 0.66, 270) },
-                ]}
+                style={[styles.inspectionTable, { width: tableMetrics.width }]}
               >
-                <View style={styles.tableRow}>
-                  <Text style={styles.tableLabel}>위치</Text>
-                  <Text style={styles.tableValue}>{position}</Text>
+                <View style={[styles.tableRow, { minHeight: tableMetrics.row }]}>
+                  <Text style={[styles.tableLabel, rowLabelStyle(tableMetrics)]}>위치</Text>
+                  <Text style={[styles.tableValue, rowValueStyle(tableMetrics)]}>{position}</Text>
                 </View>
-                <View style={styles.tableRow}>
-                  <Text style={styles.tableLabel}>내용</Text>
-                  <Text style={styles.tableValue}>{content}</Text>
+                <View style={[styles.tableRow, { minHeight: tableMetrics.row }]}>
+                  <Text style={[styles.tableLabel, rowLabelStyle(tableMetrics)]}>내용</Text>
+                  <Text style={[styles.tableValue, rowValueStyle(tableMetrics)]}>{content}</Text>
                 </View>
-                <View style={[styles.tableRow, styles.lastTableRow]}>
-                  <Text style={styles.tableLabel}>일자</Text>
-                  <Text style={styles.tableValue}>
+                <View style={[styles.tableRow, styles.lastTableRow, { minHeight: tableMetrics.row }]}>
+                  <Text style={[styles.tableLabel, rowLabelStyle(tableMetrics)]}>일자</Text>
+                  <Text style={[styles.tableValue, rowValueStyle(tableMetrics)]}>
                     {formatInspectionDate(date)}
                   </Text>
                 </View>
@@ -366,9 +396,9 @@ const styles = StyleSheet.create({
   inspectionTable: {
     backgroundColor: '#FFFFFF',
     borderColor: '#000000',
-    borderWidth: 1.5,
-    bottom: 8,
-    left: 8,
+    borderWidth: 1,
+    bottom: 0,
+    left: 0,
     position: 'absolute',
   },
   tableRow: {
