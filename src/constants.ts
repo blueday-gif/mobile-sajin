@@ -15,6 +15,27 @@ export const LOCATIONS = ['계단실', '전실', '승강기홀'] as const;
 
 export const INITIAL_DEFECTS = ['타일오염', '도장들뜸'];
 
+export const INSPECTION_KINDS = [
+  { value: 'elec', label: '4단지 전기검침' },
+  { value: 'water', label: '4단지 수도검침' },
+  { value: 'defect', label: '일반 하자점검' },
+] as const;
+
+export const INITIAL_METER_LOCATIONS = {
+  elec: [
+    'PF',
+    'MOF1-6',
+    'MOF1-7',
+    'MOF1-8',
+    'MOF2-6',
+    'MOF2-7',
+    'MOF2-8',
+    '롯데건설',
+    '노인정',
+  ],
+  water: ['시수', '지하수'],
+};
+
 export const COLORS = {
   background: '#F3F6FB',
   surface: '#FFFFFF',

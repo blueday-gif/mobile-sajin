@@ -12,7 +12,14 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { COLORS, floorLabel, formatInspectionDate } from '../constants';
+import { COLORS, formatInspectionDate } from '../constants';
+import {
+  describeInspection,
+  isMeterKind,
+  recordKind,
+  recordToDraft,
+  recordToFields,
+} from '../inspection';
 import { useInspection } from '../store/InspectionProvider';
 import { InspectionRecord } from '../types';
 
@@ -21,14 +28,7 @@ export default function RecordsScreen() {
     useInspection();
 
   const editRecord = (record: InspectionRecord) => {
-    updateDraft({
-      building_number: String(record.building_number),
-      floor: record.floor,
-      location: record.location,
-      defects: record.defects,
-      inspection_date: record.inspection_date,
-      editing_id: record.id,
-    });
+    updateDraft(recordToDraft(record));
     router.push('/');
   };
 
@@ -105,7 +105,10 @@ export default function RecordsScreen() {
         </View>
       ) : (
         <ScrollView contentContainerStyle={styles.list}>
-          {records.map((record) => (
+          {records.map((record) => {
+            const { position, content } = describeInspection(recordToFields(record));
+            const meter = isMeterKind(recordKind(record));
+            return (
             <View key={record.id} style={styles.card}>
               <Image
                 resizeMode="cover"
@@ -113,12 +116,12 @@ export default function RecordsScreen() {
                 style={styles.thumbnail}
               />
               <View style={styles.cardContent}>
-                <Text style={styles.location}>
-                  {record.building_number}동 {floorLabel(record.floor)}{' '}
-                  {record.location}
+                <Text style={[styles.badge, meter ? styles.meterBadge : styles.defectBadge]}>
+                  {meter ? '검침' : '하자'}
                 </Text>
+                <Text style={styles.location}>{position}</Text>
                 <Text numberOfLines={2} style={styles.defects}>
-                  {record.defects.join(', ')}
+                  {content}
                 </Text>
                 <Text style={styles.date}>
                   {formatInspectionDate(record.inspection_date)}
@@ -139,7 +142,8 @@ export default function RecordsScreen() {
                 </View>
               </View>
             </View>
-          ))}
+            );
+          })}
         </ScrollView>
       )}
     </SafeAreaView>
@@ -180,6 +184,18 @@ const styles = StyleSheet.create({
     width: 92,
   },
   cardContent: { flex: 1, justifyContent: 'center', paddingLeft: 12 },
+  badge: {
+    alignSelf: 'flex-start',
+    borderRadius: 999,
+    fontSize: 11,
+    fontWeight: '800',
+    marginBottom: 5,
+    overflow: 'hidden',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+  },
+  meterBadge: { backgroundColor: '#E6F5EE', color: COLORS.success },
+  defectBadge: { backgroundColor: '#FFF0F0', color: COLORS.danger },
   location: { color: COLORS.text, fontSize: 15, fontWeight: '800' },
   defects: { color: COLORS.text, fontSize: 13, marginTop: 5 },
   date: { color: COLORS.muted, fontSize: 12, marginTop: 5 },

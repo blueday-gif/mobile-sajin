@@ -65,7 +65,7 @@ export default function CameraScreen() {
         <StatusBar style="dark" />
         <Text style={styles.permissionTitle}>카메라 권한이 필요합니다</Text>
         <Text style={styles.permissionText}>
-          하자 점검 사진을 촬영하려면 카메라 접근을 허용해 주세요.
+          점검 사진을 촬영하려면 카메라 접근을 허용해 주세요.
         </Text>
         {permission.canAskAgain ? (
           <Pressable
@@ -109,7 +109,7 @@ export default function CameraScreen() {
           <View style={styles.backButton} />
         </View>
         <View style={styles.bottomBar}>
-          <Text style={styles.hint}>점검 위치와 하자가 잘 보이도록 촬영해 주세요.</Text>
+          <Text style={styles.hint}>점검 위치가 잘 보이도록 촬영해 주세요.</Text>
           <Pressable
             accessibilityLabel="사진 촬영"
             accessibilityRole="button"

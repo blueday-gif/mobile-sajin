@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "하자 점검",
+    "name": "보드사진",
     "slug": "mobile-inspection",
     "scheme": "inspection-mobile",
     "version": "1.0.0",
@@ -25,7 +25,8 @@
         "android.permission.READ_MEDIA_VISUAL_USER_SELECTED",
         "android.permission.READ_MEDIA_IMAGES"
       ],
-      "package": "com.anonymous.mobileinspection"
+      "package": "com.boardsajin.app",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -35,7 +36,7 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "하자 점검 사진을 촬영하기 위해 카메라 접근 권한이 필요합니다.",
+          "cameraPermission": "점검 사진을 촬영하기 위해 카메라 접근 권한이 필요합니다.",
           "recordAudioAndroid": false
         }
       ],

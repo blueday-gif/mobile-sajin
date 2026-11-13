@@ -20,7 +20,12 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ViewShot, { captureRef, ViewShotRef } from 'react-native-view-shot';
-import { COLORS, floorLabel, formatInspectionDate } from '../constants';
+import { COLORS, formatInspectionDate } from '../constants';
+import {
+  describeInspection,
+  draftToRecordFields,
+  missingFields,
+} from '../inspection';
 import { useInspection } from '../store/InspectionProvider';
 import { InspectionRecord } from '../types';
 
@@ -115,7 +120,7 @@ export default function PhotoPreviewScreen() {
   }, [dimensions, screenHeight, screenWidth]);
 
   const save = async () => {
-    if (!draft.building_number || !draft.floor || !draft.location || !draft.defects.length) {
+    if (missingFields(draft).length) {
       Alert.alert('점검 정보를 확인해 주세요', '필수 입력 내용이 비어 있습니다.');
       return;
     }
@@ -155,10 +160,7 @@ export default function PhotoPreviewScreen() {
 
       const record: InspectionRecord = {
         id,
-        building_number: Number(draft.building_number),
-        floor: draft.floor,
-        location: draft.location,
-        defects: draft.defects,
+        ...draftToRecordFields(draft),
         inspection_date: date,
         original_photo_uri: originalFile?.uri ?? originalUri,
         result_photo_uri: resultFile.uri,
@@ -217,7 +219,7 @@ export default function PhotoPreviewScreen() {
     }
   };
 
-  const positionText = `${draft.building_number}동 ${floorLabel(draft.floor)} ${draft.location}`;
+  const { position, content } = describeInspection(draft);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -257,11 +259,11 @@ export default function PhotoPreviewScreen() {
               >
                 <View style={styles.tableRow}>
                   <Text style={styles.tableLabel}>위치</Text>
-                  <Text style={styles.tableValue}>{positionText}</Text>
+                  <Text style={styles.tableValue}>{position}</Text>
                 </View>
                 <View style={styles.tableRow}>
                   <Text style={styles.tableLabel}>내용</Text>
-                  <Text style={styles.tableValue}>{draft.defects.join(', ')}</Text>
+                  <Text style={styles.tableValue}>{content}</Text>
                 </View>
                 <View style={[styles.tableRow, styles.lastTableRow]}>
                   <Text style={styles.tableLabel}>일자</Text>
